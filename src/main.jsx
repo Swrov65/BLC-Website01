@@ -153,7 +153,60 @@ function UserPanel({user,go,setAuth,signOut}){if(!user)return <PageShell kicker=
 function Metric({icon:Icon,label,value,sub}){return <div className="metric-card"><span className="metric-icon"><Icon size={18}/></span><small>{label}</small><b>{value}</b><span className="muted">{sub}</span></div>}
 function AdminPanel({settings,setSettings,activeTab,setActiveTab,go,user}){const tabs=[['overview','Overview',LayoutDashboard],['users','Users',Users],['content','Content',FileText],['products','Products',Boxes],['ai','AI Settings',BrainCircuit],['security','Security',ShieldCheck],['settings','Site Settings',Settings]];return <PageShell kicker="PRIVATE ADMIN CONCEPT" title={<>BLC control <span>center.</span></>} desc="An administrator dashboard prototype. Real access control, database-backed metrics and server-side permissions must be implemented before production."><div className="admin-warning"><ShieldCheck/><div><b>Security note</b><p>This is a front-end prototype, not a protected admin system. Do not publish sensitive data here. Production admin access must be enforced by a backend and role-based authentication.</p></div></div><div className="dashboard-layout admin-layout"><aside className="dash-side admin-side"><div className="admin-brand"><span className="brand-mark mini">B<span>.</span></span><div><b>BLC Control</b><small>ADMIN CONSOLE</small></div></div>{tabs.map(([id,n,I])=><button className={activeTab===id?'selected':''} key={id} onClick={()=>setActiveTab(id)}><I size={17}/>{n}</button>)}<button onClick={()=>go('home')}><ArrowRight size={17}/>View website</button></aside><div className="dash-content"><div className="dash-title"><div><h3>{tabs.find(t=>t[0]===activeTab)?.[1]}</h3><p className="muted">System overview · demo values only</p></div><span className="demo-badge">PREVIEW</span></div>{activeTab==='overview'&&<><div className="metric-grid"><Metric icon={Users} label="Total users" value="—" sub="Connect user database"/><Metric icon={Activity} label="Active users" value="—" sub="Configure analytics"/><Metric icon={FileText} label="Published posts" value="—" sub="Connect content store"/><Metric icon={ShieldCheck} label="Security alerts" value="0" sub="No live monitoring"/></div><div className="panel-card"><h3>System modules</h3><div className="module-list">{tabs.slice(1).map(([id,n,I])=><button key={id} onClick={()=>setActiveTab(id)}><I size={17}/><span>{n}</span><ChevronRight size={16}/></button>)}</div></div></>}{activeTab==='users'&&<div className="panel-card"><h3>User management</h3><p className="muted">User lists, roles, bans and account deletion become available after connecting a real database and admin API.</p><div className="empty-state"><Users/><b>No live user records</b><span>Demo environment — no user database connected.</span></div></div>}{activeTab==='content'&&<div className="panel-card"><h3>Content moderation</h3><p className="muted">Review reports, hide posts, remove violating content and record moderation actions in the production version.</p><div className="empty-state"><FileText/><b>No content records</b><span>Connect a content database to manage posts.</span></div></div>}{activeTab==='products'&&<div className="panel-card"><h3>Product catalog</h3>{products.map(p=><div className="setting-row" key={p.title}><div><b>{p.title}</b><small>{p.tag}</small></div><span className="status-pill">Concept</span></div>)}</div>}{activeTab==='ai'&&<div className="panel-card"><h3>AI & usage controls</h3><Toggle title="AI tools enabled" desc="Turn the AI Lab interface on or off." checked={settings.ai} onChange={()=>setSettings({...settings,ai:!settings.ai})}/><p className="muted small-note">Model providers, API secrets, usage limits and cost alerts must be configured securely on the server.</p></div>}{activeTab==='security'&&<div className="panel-card"><h3>Security checklist</h3>{['Admin role enforced server-side','Two-factor authentication','Rate limiting and abuse detection','Audit logs and alerts','Encrypted backups','Privacy and data deletion workflow'].map(x=><div className="check-row" key={x}><ShieldCheck size={17}/>{x}<span className="status-pill pending">Needs setup</span></div>)}</div>}{activeTab==='settings'&&<div className="panel-card"><h3>Website controls</h3><Toggle title="Maintenance mode" desc="Show a maintenance banner in a future production build." checked={settings.maintenance} onChange={()=>setSettings({...settings,maintenance:!settings.maintenance})}/><Toggle title="Allow sign-up" desc="Demo toggle only; does not control a real auth service." checked={settings.signup} onChange={()=>setSettings({...settings,signup:!settings.signup})}/><Toggle title="Promotional placements" desc="Keep promotional content disabled until you explicitly enable it." checked={settings.ads} onChange={()=>setSettings({...settings,ads:!settings.ads})}/><div className="note-box"><Check/><div><b>Settings are local demo state</b><p>Changes are not saved to a server and do not affect other visitors.</p></div></div></div>}</div></div></PageShell>}
 function Toggle({title,desc,checked,onChange}){return <div className="toggle-row"><div><b>{title}</b><p className="muted">{desc}</p></div><button className={`toggle ${checked?'on':''}`} onClick={onChange} aria-pressed={checked}><span/></button></div>}
-function Pricing({setAuth}){return <PageShell kicker="PLANS & PRICING" title={<>Start small. Scale with <span>purpose.</span></>} desc="Pricing is a placeholder until real products, costs and payment providers are configured."><div className="pricing-grid">{[['Explorer','For trying the platform','Free',['Explore public pages','Demo workspace','Product updates']],['Builder','For makers and developers','Coming soon',['Developer tools roadmap','Usage dashboard concept','Priority support roadmap']],['Business','For teams and organizations','Contact us',['Team workspace concept','Security and admin controls','Custom integrations']].map((x,i)=><div className={`price-card ${i===1?'featured':''}`} key={x[0]}>{i===1&&<span className="tag">POPULAR CONCEPT</span>}<h3>{x[0]}</h3><p className="muted">{x[1]}</p><div className="price">{x[2]}</div><div className="divider"></div>{x[3].map(y=><div className="price-feature" key={y}><Check size={15}/>{y}</div>)}<button className={`button ${i===1?'primary':'secondary'} full`} onClick={()=>i===2?setAuth('signup'):setAuth('signup')}>{i===2?'Contact sales':'Get started'} <ArrowRight size={15}/></button></div>)}</div><p className="muted center">No payment is collected by this prototype.</p></PageShell>}
+function Pricing({setAuth}) {
+return (
+<PageShell
+kicker="PLANS & PRICING"
+title={<>Start small. Scale with <span>purpose.</span></>}
+desc="Pricing is a placeholder until real products, costs and payment providers are configured."
+>
+<div className="pricing-grid">
+{[
+[
+'Explorer',
+'For trying the platform',
+'Free',
+['Explore public pages', 'Demo workspace', 'Product updates']
+],
+[
+'Builder',
+'For makers and developers',
+'Coming soon',
+['Developer tools roadmap', 'Usage dashboard concept', 'Priority support roadmap']
+],
+[
+'Business',
+'For teams and organizations',
+'Contact us',
+['Team workspace concept', 'Security and admin controls', 'Custom integrations']
+]
+].map((x, i) => (
+<div className={"price-card ${i === 1 ? 'featured' : ''}"} key={x[0]}>
+{i === 1 && <span className="tag">POPULAR CONCEPT</span>}
+<h3>{x[0]}</h3>
+<p className="muted">{x[1]}</p>
+<div className="price">{x[2]}</div>
+<div className="divider"></div>
+{x[3].map(y => (
+<div className="price-feature" key={y}>
+<Check size={15} />
+{y}
+</div>
+))}
+<button
+className={"button ${i === 1 ? 'primary' : 'secondary'} full"}
+onClick={() => setAuth('signup')}
+>
+{i === 2 ? 'Contact sales' : 'Get started'}
+<ArrowRight size={15} />
+</button>
+</div>
+))}
+</div>
+<p className="muted center">No payment is collected by this prototype.</p>
+</PageShell>
+);
+}
 function Contact({setNotice}){const [name,setName]=useState(''),[mail,setMail]=useState(''),[msg,setMsg]=useState('');return <PageShell kicker="CONTACT" title={<>Let’s make something <span>meaningful.</span></>} desc="Send a message to the BLC team. This demo form validates your input locally but does not send email to a server."><div className="contact-layout"><div className="contact-info"><h3>Start a conversation.</h3><p className="muted">Ideas, partnerships, product questions or feedback — use the form to prepare your message.</p><div className="contact-method"><span><Mail/></span><div><b>Email support</b><small>Connect a real support inbox before launch.</small></div></div><div className="contact-method"><span><MessageCircle/></span><div><b>Product feedback</b><small>Share what you would like BLC to build.</small></div></div><div className="contact-method"><span><Globe2/></span><div><b>Bangladesh · Global vision</b><small>Building for a connected digital world.</small></div></div></div><form className="form-card" onSubmit={e=>{e.preventDefault();if(!name||!mail||!msg)return;setNotice('Your message is ready in this demo, but has not been sent. Connect a backend or email service to enable delivery.');setName('');setMail('');setMsg('')}}><label>Your name<input value={name} onChange={e=>setName(e.target.value)} required placeholder="Name"/></label><label>Email address<input type="email" value={mail} onChange={e=>setMail(e.target.value)} required placeholder="you@example.com"/></label><label>How can we help?<textarea value={msg} onChange={e=>setMsg(e.target.value)} required rows="5" placeholder="Tell us about your idea…"/></label><button className="button primary full">Prepare message <ArrowRight size={16}/></button></form></div></PageShell>}
 function Docs(){return <PageShell kicker="DOCUMENTATION" title={<>Everything starts with <span>a clear guide.</span></>} desc="A starter documentation hub for future BLC products and developer integrations."><div className="docs-layout"><aside className="docs-nav"><b>GETTING STARTED</b>{['Platform overview','Account setup','AI Lab demo','Developer platform','API authentication','Security checklist','Billing & usage'].map((x,i)=><div key={x} className={i===0?'current':''}>{x}</div>)}</aside><article className="docs-article"><span className="tag">GUIDE / 01</span><h2>Platform overview</h2><p className="muted">BLC is a prototype website and product vision. This starter project includes navigation, product sections, a demo AI workspace, demo login, user dashboard and an admin-console interface.</p><h3>What works in this prototype?</h3><ul><li>Responsive pages and internal navigation.</li><li>Demo login stored in the current browser.</li><li>Sample AI response flow (not a real AI model).</li><li>Admin controls stored only in temporary UI state.</li></ul><h3>Before production</h3><ul><li>Connect backend API and database.</li><li>Implement secure authentication and server-side roles.</li><li>Connect AI provider from backend only.</li><li>Configure email/SMS verification, monitoring and backups.</li><li>Review privacy, terms, accessibility and security.</li></ul><div className="note-box"><BookOpen/><div><b>Build honestly</b><p>Do not describe demo-only controls as secure, live or production-ready.</p></div></div></article></div></PageShell>}
 function Security(){return <PageShell kicker="TRUST & SECURITY" title={<>Security is a <span>foundation.</span></>} desc="The production security roadmap for BLC should be implemented and independently reviewed before real users or sensitive data are added."><div className="security-grid">{[['Identity & access','Email/phone verification, secure sessions, MFA and least-privilege roles.'],['Data protection','TLS, encryption at rest, minimal collection and retention controls.'],['Admin protection','Server-enforced admin roles, audit trail and privileged-action confirmation.'],['Abuse prevention','Rate limits, bot protection, validation and suspicious activity alerts.'],['Recovery & resilience','Encrypted backups, tested restoration and incident response.'],['User rights','Clear privacy notice, export/deletion workflows and support contact.']].map(([t,d],i)=><div className="security-card" key={t}><span className="icon-box"><ShieldCheck/></span><span className="card-index">0{i+1}</span><h3>{t}</h3><p>{d}</p><span className="status-pill pending">Implementation required</span></div>)}</div></PageShell>}
